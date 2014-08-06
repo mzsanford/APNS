@@ -32,11 +32,11 @@ module APNS
     packed_nofications = self.packed_nofications(notifications)
 
     # sends the notifications
-    ssl.write(packed_nofications)         
+    ssl.write(packed_nofications)
 
       # if we get and error
       if IO.select([ssl], nil, nil, TIMEOUT)
-        
+
         if buffer = ssl.read(6)
           _, error_code, idx = buffer.unpack('CCN')
           error = error_code.to_i
@@ -54,7 +54,7 @@ module APNS
 
     notifications.each do |notification|
       # Each notification frame consists of
-      # 1. (e.g. protocol version) 2 (unsigned char [1 byte]) 
+      # 1. (e.g. protocol version) 2 (unsigned char [1 byte])
       # 2. size of the full frame (unsigend int [4 byte], big endian)
       pn = notification.packaged_notification
       bytes << ([2, pn.bytesize].pack('CN') + pn)
@@ -105,7 +105,6 @@ module APNS
     context.key  = OpenSSL::PKey::RSA.new(File.read(self.pem), self.pass)
 
     fhost = self.host.gsub('gateway','feedback')
-    puts fhost
 
     sock         = TCPSocket.new(fhost, 2196)
     ssl          = OpenSSL::SSL::SSLSocket.new(sock,context)
