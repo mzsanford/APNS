@@ -39,7 +39,7 @@ module APNS
 
         if buffer = ssl.read(6)
           _, error_code, idx = buffer.unpack('CCN')
-          error = error_code.to_i
+          error = ASPN::Status.status_for_code(error_code.to_i)
         end
       end
 
